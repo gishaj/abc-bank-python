@@ -1,6 +1,6 @@
 from nose.tools import assert_equals, nottest
 
-from abcbank.account import Account, CHECKING, SAVINGS
+from abcbank.account import SavingsAc, CheckingAc, MaxiSavingsAc
 from abcbank.customer import Customer
 
 class TestCustomer:
@@ -12,8 +12,8 @@ class TestCustomer:
         pass
 
     def test_statement(self):
-        checkingAccount = Account(CHECKING)
-        savingsAccount = Account(SAVINGS)
+        checkingAccount = CheckingAc()
+        savingsAccount = SavingsAc()
         henry = Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount)
         checkingAccount.deposit(100.0)
         savingsAccount.deposit(4000.0)
@@ -26,18 +26,18 @@ class TestCustomer:
 
 
     def test_oneAccount(self):
-        oscar = Customer("Oscar").openAccount(Account(SAVINGS))
+        oscar = Customer("Oscar").openAccount(SavingsAc())
         assert_equals(oscar.numAccs(), 1)
 
 
     def test_twoAccounts(self):
-        oscar = Customer("Oscar").openAccount(Account(SAVINGS))
-        oscar.openAccount(Account(CHECKING))
+        oscar = Customer("Oscar").openAccount(SavingsAc())
+        oscar.openAccount(CheckingAc())
         assert_equals(oscar.numAccs(), 2)
 
 
     @nottest
     def test_threeAccounts(self):
-        oscar = Customer("Oscar").openAccount(Account(SAVINGS))
-        oscar.openAccount(Account(CHECKING))
+        oscar = Customer("Oscar").openAccount(SavingsAc())
+        oscar.openAccount(CheckingAc())
         assert_equals(oscar.numAccs(), 3)

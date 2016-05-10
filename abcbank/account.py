@@ -1,13 +1,7 @@
 from transaction import Transaction
 
-CHECKING = 0
-SAVINGS = 1
-MAXI_SAVINGS = 2
-
-
 class Account(object):
-    def __init__(self, accountType):
-        self.accountType = accountType
+    def __init__(self):
         self.transactions = []
 
     def deposit(self, amount):
@@ -23,45 +17,30 @@ class Account(object):
             self.transactions.append(Transaction(-amount))
 
     def interestEarned(self):
-        amount = self.sumTransactions()
-        if self.accountType == SAVINGS:
-            if (amount <= 1000):
-                return amount * 0.001
-            else:
-                return 1 + (amount - 1000) * 0.002
-        if self.accountType == MAXI_SAVINGS:
-            if (amount <= 1000):
-                return amount * 0.02
-            elif (amount <= 2000):
-                return 20 + (amount - 1000) * 0.05
-            else:
-                return 70 + (amount - 2000) * 0.1
-        else:
-            return amount * 0.001
+        pass
 
     def sumTransactions(self, checkAllTransactions=True):
         return sum([t.amount for t in self.transactions])
 
-class savings(Account):
-    def interest(self):
-        intR = 0
-        for i in range (len(self.txns)):
-            intR += self.txns[i] * 1.1
-        return intR
+class SavingsAc(Account):
+    def interestEarned(self):
+        amount = self.sumTransactions()
+        if (amount <= 1000):
+            return amount * 0.001
+        else:
+            return 1 + (amount - 1000) * 0.002
 
+class CheckingAc(Account):
+    def interestEarned(self):
+        amount = self.sumTransactions()
+        return amount * 0.001
 
-class checking(Account):
-    def interest(self):
-        intR = 0
-        for i in range (len(self.txns)):
-            intR += self.txns[i] * 1.5
-        return intR
-
-
-
-class maxi(Account):
-    def interest(self):
-        intR = 0
-        for i in range (len(self.txns)):
-            intR += self.txns[i] * 1.5
-        return intR
+class MaxiSavingsAc(Account):
+    def interestEarned(self):
+        amount = self.sumTransactions()
+        if (amount <= 1000):
+            return amount * 0.02
+        elif (amount <= 2000):
+            return 20 + (amount - 1000) * 0.05
+        else:
+            return 70 + (amount - 2000) * 0.1

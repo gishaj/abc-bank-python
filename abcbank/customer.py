@@ -1,5 +1,4 @@
-from account import CHECKING, SAVINGS, MAXI_SAVINGS
-
+from abcbank.account import SavingsAc, CheckingAc, MaxiSavingsAc
 
 class Customer:
     def __init__(self, name):
@@ -30,11 +29,11 @@ class Customer:
 
     def statementForAccount(self, account):
         accountType = "\n\n\n"
-        if account.accountType == CHECKING:
+        if account.__class__.__name__ == "CheckingAc":
             accountType = "\n\nChecking Account\n"
-        if account.accountType == SAVINGS:
+        if account.__class__.__name__ == "SavingsAc":
             accountType = "\n\nSavings Account\n"
-        if account.accountType == MAXI_SAVINGS:
+        if account.__class__.__name__ == "MaxiSavingsAc":
             accountType = "\n\nMaxi Savings Account\n"
         transactionSummary = [self.withdrawalOrDepositText(t) + " " + _toDollars(abs(t.amount))
                               for t in account.transactions]
