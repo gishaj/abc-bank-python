@@ -1,11 +1,11 @@
-from abcbank.transaction import Transaction
+from transaction import Transaction
 
 CHECKING = 0
 SAVINGS = 1
 MAXI_SAVINGS = 2
 
 
-class Account:
+class Account(object):
     def __init__(self, accountType):
         self.accountType = accountType
         self.transactions = []
@@ -41,3 +41,24 @@ class Account:
 
     def sumTransactions(self, checkAllTransactions=True):
         return sum([t.amount for t in self.transactions])
+
+class savings(Account):
+    def interest(self):
+        intR = 0
+        for i in range (len(self.txns)):
+            intR += self.txns[i] * 1.1
+        return intR
+
+
+class checking(Account):
+    def interest(self):
+        intR = 0
+        for i in range (len(self.txns)):
+            intR += self.txns[i] * 1.5
+        return intR
+
+class Account:
+    def __init__(self, accountType):
+        self.accountType = accountType
+        self.transactions = []
+
