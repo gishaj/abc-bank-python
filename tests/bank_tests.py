@@ -4,7 +4,7 @@ from abcbank.account import Account, CHECKING, MAXI_SAVINGS, SAVINGS
 from abcbank.bank import Bank
 from abcbank.customer import Customer
 
-class TestAbcBank:
+class TestBank:
 
     def setUp(self):
         self.bank = Bank()
@@ -28,15 +28,13 @@ class TestAbcBank:
 
 
     def test_savings_account(self):
-        self.bank = Bank()
         checkingAccount = Account(SAVINGS)
-        bank.addCustomer(Customer("Bill").openAccount(checkingAccount))
+        self.bank.addCustomer(Customer("Bill").openAccount(checkingAccount))
         checkingAccount.deposit(1500.0)
         assert_equals(self.bank.totalInterestPaid(), 2.0)
 
 
     def test_maxi_savings_account(self):
-        bank = Bank()
         checkingAccount = Account(MAXI_SAVINGS)
         self.bank.addCustomer(Customer("Bill").openAccount(checkingAccount))
         checkingAccount.deposit(3000.0)

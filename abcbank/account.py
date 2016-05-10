@@ -57,8 +57,11 @@ class checking(Account):
             intR += self.txns[i] * 1.5
         return intR
 
-class Account:
-    def __init__(self, accountType):
-        self.accountType = accountType
-        self.transactions = []
 
+
+class maxi(Account):
+    def interest(self):
+        intR = 0
+        for i in range (len(self.txns)):
+            intR += self.txns[i] * 1.5
+        return intR
