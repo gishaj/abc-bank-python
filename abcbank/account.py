@@ -4,17 +4,29 @@ class Account(object):
     def __init__(self):
         self.transactions = []
 
-    def deposit(self, amount):
+    #Added account argument to allow deposit from another account
+    # but no withdraw from another account;
+    def deposit(self, amount, account=None):
         if (amount <= 0):
             raise ValueError("amount must be greater than zero")
         else:
-            self.transactions.append(Transaction(amount))
+            if account:
+                account.transactions.append(Transaction(amount))
+            else:
+                self.transactions.append(Transaction(amount))
 
     def withdraw(self, amount):
         if (amount <= 0):
             raise ValueError("amount must be greater than zero")
         else:
             self.transactions.append(Transaction(-amount))
+
+    def transfer(self, amount, toAccount):
+        if (amount <= 0):
+            raise ValueError("amount must be greater than zero")
+        else:
+            self.withdraw(amount)
+            self.deposit(amount, toAccount)
 
     def interestEarned(self):
         pass

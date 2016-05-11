@@ -37,8 +37,24 @@ class TestCustomer:
 
 
     # @nottest
+    # Enable this test case
     def test_threeAccounts(self):
         oscar = Customer("Oscar").openAccount(SavingsAc())
         oscar.openAccount(CheckingAc())
         oscar.openAccount(MaxiSavingsAc())
         assert_equals(oscar.numAccs(), 3)
+
+    def test_transfer(self):
+        checkingAccount = CheckingAc()
+        savingsAccount = SavingsAc()
+        oscar = Customer("Oscar").openAccount(checkingAccount)
+        oscar.openAccount(savingsAccount)
+        checkingAccount.deposit(100.0)
+        savingsAccount.deposit(4000.0)
+        savingsAccount.withdraw(200.0)
+        savingsAccount.transfer(500.0, checkingAccount)
+        assert_equals(oscar.getStatement(),
+                      "Statement for Oscar" +
+                      "\n\nChecking Account\n  deposit $100.00\n  deposit $500.00\nTotal $600.00" +
+                      "\n\nSavings Account\n  deposit $4000.00\n  withdrawal $200.00\n  withdrawal $500.00\nTotal $3300.00" +
+                      "\n\nTotal In All Accounts $3900.00")
