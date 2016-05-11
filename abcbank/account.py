@@ -113,9 +113,9 @@ class MaxiSavingsAc(Account):
         # Changing logic to have different interest rates
         # based on recent activity
         if self.recentWithdrawal():
-            return amount * 0.001
+            return self.dailyInterest(0.001)
         else:
-            return amount * 0.05
+            return self.dailyInterest(0.05)
         # if (amount <= 1000):
         #     return amount * 0.02
         # elif (amount <= 2000):

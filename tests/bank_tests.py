@@ -6,6 +6,19 @@ from abcbank.customer import Customer
 
 from datetime import datetime
 
+# The following module is only available from python 3.3
+# but can be used to mock today's date so that all tests 
+# complete successfully
+#
+#
+# import mock
+
+# def mocked_get_now(timezone):
+#     dt = datetime.strptime('May 10 2016  11:00PM', '%b %d %Y %I:%M%p')
+#     return timezone.localize(dt)
+
+#     @mock.patch('path.to.your.models.MyClass.get_now', side_effect=mocked_get_now)
+
 class TestBank:
 
     def setUp(self):
@@ -44,10 +57,11 @@ class TestBank:
     def test_maxi_savings_account(self):
         maxiSavingsAccount = MaxiSavingsAc()
         self.bank.addCustomer(Customer("Bill").openAccount(maxiSavingsAccount))
-        maxiSavingsAccount.deposit(3000.0)
+        txnDate = datetime.strptime('Feb 5 2012  4:21PM', '%b %d %Y %I:%M%p')
+        maxiSavingsAccount.deposit(3000.0,txnDate)
         # Different interest after maxi interst calculation logic is changed
         # assert_equals(self.bank.totalInterestPaid(), 170.0)
-        assert_equals(self.bank.totalInterestPaid(), 150.0)
+        assert_equals(self.bank.totalInterestPaid(), 639.4520547945206)
 
     def test_maxi_savings_account_recent_withdrawal(self):
         maxiSavingsAccount = MaxiSavingsAc()
@@ -58,9 +72,9 @@ class TestBank:
         maxiSavingsAccount.deposit(3000.0, txnDate)
         # Putting a date in the future, which should fail elsewhere in the ideal
         # scenario, but this is to ensure that this test case passes for a longtime
-        txnDate = datetime.strptime('May 9 2050  3:21PM', '%b %d %Y %I:%M%p')
+        txnDate = datetime.strptime('May 9 2016  3:21PM', '%b %d %Y %I:%M%p')
         maxiSavingsAccount.withdraw(100.0, txnDate)
-        assert_equals(self.bank.totalInterestPaid(), 3.1)
+        assert_equals(self.bank.totalInterestPaid(), 0.008493150684931507)
 
     def test_maxi_savings_account_nonrecent_withdrawal(self):
         maxiSavingsAccount = MaxiSavingsAc()
@@ -71,4 +85,4 @@ class TestBank:
         maxiSavingsAccount.deposit(3000.0, txnDate)
         txnDate = datetime.strptime('Mar 19 2012  3:21PM', '%b %d %Y %I:%M%p')
         maxiSavingsAccount.withdraw(100.0, txnDate)
-        assert_equals(self.bank.totalInterestPaid(), 155)
+        assert_equals(self.bank.totalInterestPaid(), 642.5068493150685)
