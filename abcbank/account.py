@@ -59,11 +59,9 @@ class Account(object):
                 elif lastWithdrawal < txn.transactionDate:
                     lastWithdrawal = txn.transactionDate
         if lastWithdrawal:
-            last = lastWithdrawal - datetime.now()
-            print ("Recent withdrawal is : %s" % ((last.days - 10) < 10))
+            last = datetime.now() - lastWithdrawal
             return ((last.days - 10) < 10)
         else:
-            print ("Recent withdrawal is : False")
             return False
 
 class SavingsAc(Account):
@@ -81,14 +79,15 @@ class CheckingAc(Account):
         totalInterest = 0.0
         for txnNum in range(len(self.transactions)):
             if txnNum:      #No interest with first transaction
-                accruedAmt = self.sumTransactions(self.transactions[txnNum].transactionDate)
-                # Add interest so far also to the current principal
-                accruedAmt += totalInterest
-                datesBetween  = self.transactions[txnNum].transactionDate - self.transactions[txnNum-1].transactionDate
-                # Need to account for leap year later, 
-                # as we need to include interests accrued in days
-                # spread between leap and non leap year
-                totalInterest = datesBetween.days * 0.001 / 365
+                continue
+            accruedAmt = self.sumTransactions(self.transactions[txnNum].transactionDate)
+            # Add interest so far also to the current principal
+            accruedAmt += totalInterest
+            datesBetween  = self.transactions[txnNum].transactionDate - self.transactions[txnNum-1].transactionDate
+            # Need to account for leap year later, 
+            # as we need to include interests accrued in days
+            # spread between leap and non leap year
+            totalInterest = datesBetween.days * 0.001 / 365
         return totalInterest
 
 
