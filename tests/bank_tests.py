@@ -4,6 +4,8 @@ from abcbank.account import SavingsAc, CheckingAc, MaxiSavingsAc
 from abcbank.bank import Bank
 from abcbank.customer import Customer
 
+from datetime import datetime
+
 class TestBank:
 
     def setUp(self):
@@ -22,8 +24,14 @@ class TestBank:
         checkingAccount = CheckingAc()
         bill = Customer("Bill").openAccount(checkingAccount)
         self.bank.addCustomer(bill)
-        checkingAccount.deposit(100.0)
-        assert_equals(self.bank.totalInterestPaid(), 0.1)
+        txnDate = datetime.strptime('May 1 2016  10:14AM', '%b %d %Y %I:%M%p')
+        checkingAccount.deposit(100.0, txnDate)
+        txnDate = datetime.strptime('May 5 2016  3:21PM', '%b %d %Y %I:%M%p')
+        checkingAccount.deposit(200.0, txnDate)
+        #since we moved over to daily interest and the total interest
+        # is calculated on a daily basis, this value will change
+        # assert_equals(self.bank.totalInterestPaid(), 0.1)
+        assert_equals(self.bank.totalInterestPaid(), 1.0958904109589042e-05)
 
 
     def test_savings_account(self):

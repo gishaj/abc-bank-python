@@ -3,6 +3,8 @@ from nose.tools import assert_equals, nottest
 from abcbank.account import SavingsAc, CheckingAc, MaxiSavingsAc
 from abcbank.customer import Customer
 
+from datetime import datetime
+
 class TestCustomer:
 
     def setUp(self):
@@ -52,7 +54,8 @@ class TestCustomer:
         checkingAccount.deposit(100.0)
         savingsAccount.deposit(4000.0)
         savingsAccount.withdraw(200.0)
-        savingsAccount.transfer(500.0, checkingAccount)
+        todayDate = datetime.now()
+        savingsAccount.transfer(500.0, checkingAccount, todayDate)
         assert_equals(oscar.getStatement(),
                       "Statement for Oscar" +
                       "\n\nChecking Account\n  deposit $100.00\n  deposit $500.00\nTotal $600.00" +

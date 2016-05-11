@@ -1,5 +1,5 @@
 from transaction import Transaction
-import datetime
+from datetime import datetime
 
 class Account(object):
     def __init__(self):
@@ -7,28 +7,36 @@ class Account(object):
 
     #Added account argument to allow deposit from another account
     # but no withdraw from another account;
-    def deposit(self, amount, account=None):
+    def deposit(self, amount, txnDate=None, account=None):
         if (amount <= 0):
             raise ValueError("amount must be greater than zero")
         else:
             if account:
                 account.transactions.append(Transaction(amount))
+            elif account and txnDate:
+                account.transactions.append(Transaction(amount, txnDate))
+            elif txnDate:
+                self.transactions.append(Transaction(amount, txnDate))
             else:
                 self.transactions.append(Transaction(amount))
 
-    def withdraw(self, amount):
+    def withdraw(self, amount, txnDate=None):
         if (amount <= 0):
             raise ValueError("amount must be greater than zero")
+        elif self.sumTransactions() - amount < 0:
+            raise ValueError("Insufficient Funds")
+        elif txnDate:
+            self.transactions.append(Transaction(-amount, txnDate))
         else:
             self.transactions.append(Transaction(-amount))
 
     #To allow a customer to transfer from one of his account to another
-    def transfer(self, amount, toAccount):
+    def transfer(self, amount, toAccount, txnDate=None):
         if (amount <= 0):
             raise ValueError("amount must be greater than zero")
         else:
-            self.withdraw(amount)
-            self.deposit(amount, toAccount)
+            self.withdraw(amount, txnDate)
+            self.deposit(amount, txnDate, toAccount)
 
     def interestEarned(self):
         pass
@@ -38,14 +46,14 @@ class Account(object):
 
     def recentWithdrawal(self):
         lastWithdrawal = None
-        for i in self.transactions:
-            if i.amount < 0:
+        for txn in self.transactions:
+            if txn.amount < 0:
                 if not lastWithdrawal:
-                    lastWithdrawal = i.transactionDate
-                elif lastWithdrawal < i.transactionDate:
-                    lastWithdrawal = i.transactionDate
+                    lastWithdrawal = txn.transactionDate
+                elif lastWithdrawal < txn.transactionDate:
+                    lastWithdrawal = txn.transactionDate
         if lastWithdrawal:
-            last = lastWithdrawal - datetime.datetime.now()
+            last = lastWithdrawal - datetime.now()
             return ((last.days - 10) < 10)
         else:
             return False
@@ -60,8 +68,23 @@ class SavingsAc(Account):
 
 class CheckingAc(Account):
     def interestEarned(self):
-        amount = self.sumTransactions()
-        return amount * 0.001
+        # amount = self.sumTransactions()
+        # return amount * 0.001
+        totalInterest = 0.0
+        for txnNum in range(len(self.transactions)):
+            if txnNum:      #No interest with first transaction
+                accruedAmt = self.sumTransactions(self.transactions[txnNum].transactionDate)
+                # Add interest so far also to the current principal
+                accruedAmt += totalInterest
+                datesBetween  = self.transactions[txnNum].transactionDate - self.transactions[txnNum-1].transactionDate
+                # Need to account for leap year later, 
+                # as we need to include interests accrued in days
+                # spread between leap and non leap year
+                totalInterest = datesBetween.days * 0.001 / 365
+        return totalInterest
+
+
+
 
 class MaxiSavingsAc(Account):
     def interestEarned(self):
