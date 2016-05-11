@@ -46,7 +46,7 @@ class Account(object):
                     lastWithdrawal = i.transactionDate
         if lastWithdrawal:
             last = lastWithdrawal - datetime.datetime.now()
-            return ((last - 10) < 10)
+            return ((last.days - 10) < 10)
         else:
             return False
 

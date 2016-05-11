@@ -39,3 +39,12 @@ class TestBank:
         # Different interest after maxi interst calculation logic is changed
         # assert_equals(self.bank.totalInterestPaid(), 170.0)
         assert_equals(self.bank.totalInterestPaid(), 150.0)
+
+    def test_maxi_savings_account_recent_withdrawal(self):
+        maxiSavingsAccount = MaxiSavingsAc()
+        self.bank.addCustomer(Customer("Bill").openAccount(maxiSavingsAccount))
+        maxiSavingsAccount.deposit(3000.0)
+        maxiSavingsAccount.withdraw(100.0)
+        # Different interest after maxi interst calculation logic is changed
+        # assert_equals(self.bank.totalInterestPaid(), 170.0)
+        assert_equals(self.bank.totalInterestPaid(), 2.9)
