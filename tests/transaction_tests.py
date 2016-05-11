@@ -7,7 +7,7 @@ class TestCustomer:
     def setUp(self):
         pass
 
-    def teatDown(self):
+    def tearDown(self):
         pass
 
 	def test_type():

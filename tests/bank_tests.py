@@ -9,7 +9,7 @@ class TestBank:
     def setUp(self):
         self.bank = Bank()
 
-    def teatDown(self):
+    def tearDown(self):
         pass
 
     def test_customer_summary(self):

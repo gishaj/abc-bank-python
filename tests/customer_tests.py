@@ -8,7 +8,7 @@ class TestCustomer:
     def setUp(self):
         pass
 
-    def teatDown(self):
+    def tearDown(self):
         pass
 
     def test_statement(self):
@@ -36,8 +36,9 @@ class TestCustomer:
         assert_equals(oscar.numAccs(), 2)
 
 
-    @nottest
+    # @nottest
     def test_threeAccounts(self):
         oscar = Customer("Oscar").openAccount(SavingsAc())
         oscar.openAccount(CheckingAc())
+        oscar.openAccount(MaxiSavingsAc())
         assert_equals(oscar.numAccs(), 3)
