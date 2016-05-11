@@ -66,6 +66,8 @@ class CheckingAc(Account):
 class MaxiSavingsAc(Account):
     def interestEarned(self):
         amount = self.sumTransactions()
+        # Changing logic to have different interest rates
+        # based on recent activity
         if self.recentWithdrawal():
             return amount * 0.001
         else:
