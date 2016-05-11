@@ -37,8 +37,9 @@ class TestBank:
     def test_savings_account(self):
         savingsAccount = SavingsAc()
         self.bank.addCustomer(Customer("Bill").openAccount(savingsAccount))
-        savingsAccount.deposit(1500.0)
-        assert_equals(self.bank.totalInterestPaid(), 2.0)
+        txnDate = datetime.strptime('May 1 2012  10:14AM', '%b %d %Y %I:%M%p')
+        savingsAccount.deposit(100.0, txnDate)
+        assert_equals(self.bank.totalInterestPaid(), 0.40273972602739727)
 
     def test_maxi_savings_account(self):
         maxiSavingsAccount = MaxiSavingsAc()

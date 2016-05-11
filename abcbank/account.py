@@ -41,6 +41,36 @@ class Account(object):
     def interestEarned(self):
         pass
 
+    #This was done in a hurry and needs to be cleaned up better
+    def dailyInterest(self, yrlyInterest=None, baseAmt=None, yrlyInterest2=None):
+        # amount = self.sumTransactions()
+        # return amount * 0.001
+        totalInterest = 0.0
+
+        for txnNum in range(len(self.transactions)):
+            if txnNum:      #No interest with first transaction
+                continue
+            accruedAmt = self.sumTransactions(self.transactions[txnNum].transactionDate)
+            # Add interest so far also to the current principal
+            accruedAmt += totalInterest
+            daysBetween  = (self.transactions[txnNum].transactionDate - self.transactions[txnNum-1].transactionDate).days
+            # Need to account for leap year later, 
+            # as we need to include interests accrued in days
+            # spread between say a leap and non leap year
+            if not baseAmt:
+                totalInterest = accruedAmt * daysBetween * yrlyInterest / 365
+            elif accruedAmt < baseAmt:
+                totalInterest = accruedAmt * daysBetween * yrlyInterest / 365
+            else:
+                totalInterest = accruedAmt * daysBetween * yrlyInterest2 / 365
+
+
+        #Calculate the interest from the last txn till today.
+        daysLastTxn = (datetime.now() - self.transactions[len(self.transactions) -1].transactionDate).days
+        totalInterest += self.sumTransactions() * daysLastTxn * yrlyInterest / 365
+
+        return totalInterest
+
     def sumTransactions(self, tillDate=None):
         if not tillDate:
             return sum([t.amount for t in self.transactions])
@@ -67,37 +97,15 @@ class Account(object):
 class SavingsAc(Account):
     def interestEarned(self):
         amount = self.sumTransactions()
-        if (amount <= 1000):
-            return amount * 0.001
-        else:
-            return 1 + (amount - 1000) * 0.002
+        # if (amount <= 1000):
+        #     return amount * 0.001
+        # else:
+        #     return 1 + (amount - 1000) * 0.002
+        return self.dailyInterest(0.001, 1000, 0.002)
 
 class CheckingAc(Account):
     def interestEarned(self):
-        # amount = self.sumTransactions()
-        # return amount * 0.001
-        totalInterest = 0.0
-        
-        for txnNum in range(len(self.transactions)):
-            if txnNum:      #No interest with first transaction
-                continue
-            accruedAmt = self.sumTransactions(self.transactions[txnNum].transactionDate)
-            # Add interest so far also to the current principal
-            accruedAmt += totalInterest
-            datesBetween  = self.transactions[txnNum].transactionDate - self.transactions[txnNum-1].transactionDate
-            # Need to account for leap year later, 
-            # as we need to include interests accrued in days
-            # spread between say a leap and non leap year
-            totalInterest = accruedAmt * datesBetween.days * 0.001 / 365
-
-        #Calculate the interest from the last txn till today.
-        daysLastTxn = (datetime.now() - self.transactions[len(self.transactions) -1].transactionDate).days
-        totalInterest += self.sumTransactions() * daysLastTxn * 0.001 / 365
-
-        return totalInterest
-
-
-
+        return self.dailyInterest(0.001)
 
 class MaxiSavingsAc(Account):
     def interestEarned(self):
