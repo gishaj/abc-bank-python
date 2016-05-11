@@ -77,6 +77,7 @@ class CheckingAc(Account):
         # amount = self.sumTransactions()
         # return amount * 0.001
         totalInterest = 0.0
+        
         for txnNum in range(len(self.transactions)):
             if txnNum:      #No interest with first transaction
                 continue
@@ -86,8 +87,13 @@ class CheckingAc(Account):
             datesBetween  = self.transactions[txnNum].transactionDate - self.transactions[txnNum-1].transactionDate
             # Need to account for leap year later, 
             # as we need to include interests accrued in days
-            # spread between leap and non leap year
-            totalInterest = datesBetween.days * 0.001 / 365
+            # spread between say a leap and non leap year
+            totalInterest = accruedAmt * datesBetween.days * 0.001 / 365
+
+        #Calculate the interest from the last txn till today.
+        daysLastTxn = (datetime.now() - self.transactions[len(self.transactions) -1].transactionDate).days
+        totalInterest += self.sumTransactions() * daysLastTxn * 0.001 / 365
+
         return totalInterest
 
 

@@ -31,7 +31,7 @@ class TestBank:
         #since we moved over to daily interest and the total interest
         # is calculated on a daily basis, this result will change
         # assert_equals(self.bank.totalInterestPaid(), 0.1)
-        assert_equals(self.bank.totalInterestPaid(), -1.3698630136986302e-05)
+        assert_equals(self.bank.totalInterestPaid(), 0.00410958904109589)
 
 
     def test_savings_account(self):
