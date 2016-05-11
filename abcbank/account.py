@@ -41,8 +41,14 @@ class Account(object):
     def interestEarned(self):
         pass
 
-    def sumTransactions(self, checkAllTransactions=True):
-        return sum([t.amount for t in self.transactions])
+    def sumTransactions(self, tillDate=None):
+        if not tillDate:
+            return sum([t.amount for t in self.transactions])
+        txnSum = 0.0
+        for txn in self.transactions:
+            if txn.transactionDate < tillDate:
+                txnSum += txn.amount;
+        return txnSum
 
     def recentWithdrawal(self):
         lastWithdrawal = None
@@ -54,8 +60,10 @@ class Account(object):
                     lastWithdrawal = txn.transactionDate
         if lastWithdrawal:
             last = lastWithdrawal - datetime.now()
+            print ("Recent withdrawal is : %s" % ((last.days - 10) < 10))
             return ((last.days - 10) < 10)
         else:
+            print ("Recent withdrawal is : False")
             return False
 
 class SavingsAc(Account):

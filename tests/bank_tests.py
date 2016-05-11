@@ -51,8 +51,25 @@ class TestBank:
     def test_maxi_savings_account_recent_withdrawal(self):
         maxiSavingsAccount = MaxiSavingsAc()
         self.bank.addCustomer(Customer("Bill").openAccount(maxiSavingsAccount))
-        maxiSavingsAccount.deposit(3000.0)
-        maxiSavingsAccount.withdraw(100.0)
+        txnDate = datetime.strptime('Feb 5 2012  3:21PM', '%b %d %Y %I:%M%p')
+        maxiSavingsAccount.deposit(200.0, txnDate)
+        txnDate = datetime.strptime('Feb 5 2012  4:21PM', '%b %d %Y %I:%M%p')
+        maxiSavingsAccount.deposit(3000.0, txnDate)
+        txnDate = datetime.strptime('May 9 2016  3:21PM', '%b %d %Y %I:%M%p')
+        maxiSavingsAccount.withdraw(100.0, txnDate)
         # Different interest after maxi interst calculation logic is changed
         # assert_equals(self.bank.totalInterestPaid(), 170.0)
-        assert_equals(self.bank.totalInterestPaid(), 2.9)
+        assert_equals(self.bank.totalInterestPaid(), 3.1)
+
+    def test_maxi_savings_account_nonrecent_withdrawal(self):
+        maxiSavingsAccount = MaxiSavingsAc()
+        self.bank.addCustomer(Customer("Bill").openAccount(maxiSavingsAccount))
+        txnDate = datetime.strptime('Feb 5 2012  3:21PM', '%b %d %Y %I:%M%p')
+        maxiSavingsAccount.deposit(200.0, txnDate)
+        txnDate = datetime.strptime('Feb 5 2012  4:21PM', '%b %d %Y %I:%M%p')
+        maxiSavingsAccount.deposit(3000.0, txnDate)
+        txnDate = datetime.strptime('Mar 19 2012  3:21PM', '%b %d %Y %I:%M%p')
+        maxiSavingsAccount.withdraw(100.0, txnDate)
+        # Different interest after maxi interst calculation logic is changed
+        # assert_equals(self.bank.totalInterestPaid(), 170.0)
+        assert_equals(self.bank.totalInterestPaid(), 3.1)
